@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Register</title>
+    <title>PMS App - Register</title>
     <link
       rel="shortcut icon"
       type="image/png"
@@ -42,6 +42,17 @@
                     method="post"
                   >
                     <div class="mb-3">
+                      <label for="inputName" class="form-label"
+                        >Full Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        th:field="*{name}"
+                        id="inputName"
+                      />
+                    </div>
+                    <div class="mb-3">
                       <label for="inputUsername" class="form-label"
                         >Username</label
                       >
@@ -50,7 +61,25 @@
                         class="form-control"
                         th:field="*{username}"
                         id="inputUsername"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="inputEmail" class="form-label">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        th:field="*{email}"
+                        id="inputEmail"
                         aria-describedby="emailHelp"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="inputPhone" class="form-label">Phone</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        th:field="*{phone}"
+                        id="inputPhone"
                       />
                     </div>
                     <div class="mb-4">
