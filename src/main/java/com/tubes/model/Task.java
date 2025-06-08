@@ -2,6 +2,7 @@ package com.tubes.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Task {
@@ -12,7 +13,9 @@ public class Task {
     private String title;
     private String description;
     private String status; // "TODO", "IN_PROGRESS", "DONE"
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
+
     private String priority; // "LOW", "MEDIUM", "HIGH"
 
     @ManyToOne

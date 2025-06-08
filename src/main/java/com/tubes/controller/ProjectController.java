@@ -48,7 +48,7 @@ public class ProjectController {
     public String updateProject(@PathVariable Long id, @ModelAttribute Project project) {
         project.setId(id);
         projectRepo.save(project);
-        return "redirect:/projects";
+        return "redirect:/projects/" + id;
     }
 
     @PostMapping("/{id}/delete")
