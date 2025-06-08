@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Project Details - PMS App</title>
+    <link rel="stylesheet" href="/assets/css/styles.min.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="card-title fw-semibold" th:text="${project.name}"></h5>
+            <div>
+              <a
+                th:href="@{/projects/{id}/edit(id=${project.id})}"
+                class="btn btn-warning"
+                >Edit Project</a
+              >
+              <form
+                th:action="@{/projects/{id}/delete(id=${project.id})}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-danger"
+                  onclick="return confirm('Are you sure?')"
+                >
+                  Delete Project
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <p th:text="${project.description}"></p>
+          <p>
+            <strong>Status:</strong> <span th:text="${project.status}"></span>
+          </p>
+
+          <div class="mb-3">
+            <a
+              th:href="@{/projects/{id}/tasks/new(id=${project.id})}"
+              class="btn btn-primary"
+              >Add Task</a
+            >
+          </div>
+
+          <div class="row">
+            <!-- TODO Column -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header bg-light">To Do</div>
+                <div class="card-body">
+                  <div
+                    th:each="task : ${project.tasks}"
+                    th:if="${task.status == 'TODO'}"
+                    class="card mb-2"
+                  >
+                    <div class="card-body">
+                      <h6 th:text="${task.title}"></h6>
+                      <p th:text="${task.description}"></p>
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div>
+                          <span
+                            class="badge"
+                            th:classappend="${task.priority == 'HIGH' ? 'bg-danger' : (task.priority == 'MEDIUM' ? 'bg-warning' : 'bg-info')}"
+                            th:text="${task.priority}"
+                          ></span>
+                          <span
+                            class="ms-2"
+                            th:text="${#dates.format(task.dueDate, 'yyyy-MM-dd')}"
+                          ></span>
+                        </div>
+                        <div>
+                          <a
+                            th:href="@{/projects/{projectId}/tasks/{taskId}/edit(projectId=${project.id},taskId=${task.id})}"
+                            class="btn btn-warning btn-sm"
+                            >Edit</a
+                          >
+                          <form
+                            th:action="@{/projects/{projectId}/tasks/{taskId}/delete(projectId=${project.id},taskId=${task.id})}"
+                            method="post"
+                            style="display: inline"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-danger btn-sm"
+                              onclick="return confirm('Are you sure?')"
+                            >
+                              Delete
+                            </button>
+                          </form>
+                          <form
+                            th:action="@{/projects/{projectId}/tasks/{taskId}/status(projectId=${project.id},taskId=${task.id})}"
+                            method="post"
+                            style="display: inline"
+                          >
+                            <input
+                              type="hidden"
+                              name="status"
+                              value="IN_PROGRESS"
+                            />
+                            <button
+                              type="submit"
+                              class="btn btn-success btn-sm"
+                            >
+                              Move to In Progress
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- IN PROGRESS Column -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header bg-light">In Progress</div>
+                <div class="card-body">
+                  <div
+                    th:each="task : ${project.tasks}"
+                    th:if="${task.status == 'IN_PROGRESS'}"
+                    class="card mb-2"
+                  >
+                    <div class="card-body">
+                      <h6 th:text="${task.title}"></h6>
+                      <p th:text="${task.description}"></p>
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div>
+                          <span
+                            class="badge"
+                            th:classappend="${task.priority == 'HIGH' ? 'bg-danger' : (task.priority == 'MEDIUM' ? 'bg-warning' : 'bg-info')}"
+                            th:text="${task.priority}"
+                          ></span>
+                          <span
+                            class="ms-2"
+                            th:text="${#dates.format(task.dueDate, 'yyyy-MM-dd')}"
+                          ></span>
+                        </div>
+                        <div>
+                          <a
+                            th:href="@{/projects/{projectId}/tasks/{taskId}/edit(projectId=${project.id},taskId=${task.id})}"
+                            class="btn btn-warning btn-sm"
+                            >Edit</a
+                          >
+                          <form
+                            th:action="@{/projects/{projectId}/tasks/{taskId}/delete(projectId=${project.id},taskId=${task.id})}"
+                            method="post"
+                            style="display: inline"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-danger btn-sm"
+                              onclick="return confirm('Are you sure?')"
+                            >
+                              Delete
+                            </button>
+                          </form>
+                          <form
+                            th:action="@{/projects/{projectId}/tasks/{taskId}/status(projectId=${project.id},taskId=${task.id})}"
+                            method="post"
+                            style="display: inline"
+                          >
+                            <input type="hidden" name="status" value="DONE" />
+                            <button
+                              type="submit"
+                              class="btn btn-success btn-sm"
+                            >
+                              Move to Done
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DONE Column -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header bg-light">Done</div>
+                <div class="card-body">
+                  <div
+                    th:each="task : ${project.tasks}"
+                    th:if="${task.status == 'DONE'}"
+                    class="card mb-2"
+                  >
+                    <div class="card-body">
+                      <h6 th:text="${task.title}"></h6>
+                      <p th:text="${task.description}"></p>
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <div>
+                          <span
+                            class="badge"
+                            th:classappend="${task.priority == 'HIGH' ? 'bg-danger' : (task.priority == 'MEDIUM' ? 'bg-warning' : 'bg-info')}"
+                            th:text="${task.priority}"
+                          ></span>
+                          <span
+                            class="ms-2"
+                            th:text="${#dates.format(task.dueDate, 'yyyy-MM-dd')}"
+                          ></span>
+                        </div>
+                        <div>
+                          <a
+                            th:href="@{/projects/{projectId}/tasks/{taskId}/edit(projectId=${project.id},taskId=${task.id})}"
+                            class="btn btn-warning btn-sm"
+                            >Edit</a
+                          >
+                          <form
+                            th:action="@{/projects/{projectId}/tasks/{taskId}/delete(projectId=${project.id},taskId=${task.id})}"
+                            method="post"
+                            style="display: inline"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-danger btn-sm"
+                              onclick="return confirm('Are you sure?')"
+                            >
+                              Delete
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

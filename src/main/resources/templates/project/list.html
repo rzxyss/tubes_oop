@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Projects - PMS App</title>
+    <link rel="stylesheet" href="/assets/css/styles.min.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Projects</h5>
+                
+                <div class="mb-3">
+                    <a href="/projects/new" class="btn btn-primary">Create New Project</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table text-nowrap mb-0 align-middle">
+                        <thead class="text-dark fs-4">
+                            <tr>
+                                <th class="border-bottom-0">Project Name</th>
+                                <th class="border-bottom-0">Description</th>
+                                <th class="border-bottom-0">Status</th>
+                                <th class="border-bottom-0">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="project : ${projects}">
+                                <td th:text="${project.name}"></td>
+                                <td th:text="${project.description}"></td>
+                                <td th:text="${project.status}"></td>
+                                <td>
+                                    <a th:href="@{/projects/{id}(id=${project.id})}" class="btn btn-info btn-sm">View</a>
+                                    <a th:href="@{/projects/{id}/edit(id=${project.id})}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form th:action="@{/projects/{id}/delete(id=${project.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
