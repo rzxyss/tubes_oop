@@ -10,9 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("com.tubes.repository")
 @EntityScan("com.tubes.model")
 @ComponentScan(basePackages = {
+		"com.tubes.config",
+		"com.tubes.Services",
 		"com.tubes.controller",
 		"com.tubes.model",
-		"com.tubes.repository"
+		"com.tubes.repository",
 })
 public class TubesOopApplication {
 

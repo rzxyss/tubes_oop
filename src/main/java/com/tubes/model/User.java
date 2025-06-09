@@ -13,16 +13,18 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    private String role;
 
     public User() {
     }
 
-    public User(String name, String username, String password, String email, String phone) {
+    public User(String name, String username, String password, String email, String phone, String role) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.role = role;
     }
 
     // getter setter
@@ -73,5 +75,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
