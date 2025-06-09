@@ -11,34 +11,54 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/login",
-                                "/register",
-                                "/webjars/**",
-                                "/assets/**",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**",
-                                "/favicon.ico")
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error=true"))
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"));
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                // Permit all untuk resources dan halaman login/register
+                                                .requestMatchers(
+                                                                "/login",
+                                                                "/register",
+                                                                "/webjars/**",
+                                                                "/assets/**",
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/favicon.ico")
+                                                .permitAll()
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+                                                // Endpoint spesifik yang hanya untuk ADMIN
+                                                .requestMatchers(
+                                                                "/projects/new",
+                                                                "/projects/create",
+                                                                "/projects/*/edit",
+                                                                "/projects/*/delete")
+                                                .hasAuthority("ROLE_ADMIN")
+
+                                                // Endpoint umum projects dan tasks untuk USER dan ADMIN
+                                                .requestMatchers("/projects", "/projects/", "/projects/**", "/tasks/**")
+                                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+
+                                                // Semua request lainnya membutuhkan autentikasi
+                                                .anyRequest().authenticated())
+
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .defaultSuccessUrl("/", true)
+                                                .failureUrl("/login?error=true"))
+
+                                .exceptionHandling(exception -> exception
+                                                .accessDeniedPage("/projects"))
+
+                                .logout(logout -> logout
+                                                .logoutSuccessUrl("/login?logout")
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID"));
+                return http.build();
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }

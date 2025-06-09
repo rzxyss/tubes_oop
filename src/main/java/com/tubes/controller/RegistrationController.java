@@ -28,6 +28,7 @@ public class RegistrationController {
     @PostMapping("/register")
     public String register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER");
         userRepository.save(user);
         return "redirect:/login";
     }

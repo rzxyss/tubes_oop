@@ -12,7 +12,7 @@ public class Task {
 
     private String title;
     private String description;
-    private String status; // "TODO", "IN_PROGRESS", "DONE"
+    private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
 
