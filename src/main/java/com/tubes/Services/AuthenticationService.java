@@ -38,27 +38,29 @@ public class AuthenticationService {
         return currentUser != null && currentUser.getId().equals(userId);
     }
 
-    public boolean canEditTask(Long taskId) {
-        Task task = taskRepo.findById(taskId).orElse(null);
-        User currentUser = getCurrentUser();
+    // public boolean canEditTask(Long taskId) {
+    // Task task = taskRepo.findById(taskId).orElse(null);
+    // User currentUser = getCurrentUser();
 
-        if (task == null || currentUser == null) {
-            return false;
-        }
+    // if (task == null || currentUser == null) {
+    // return false;
+    // }
 
-        boolean isAssignee = task.getAssignee() != null && task.getAssignee().getId().equals(currentUser.getId());
-        boolean isProjectOwner = task.getProject().getOwner() != null &&
-                task.getProject().getOwner().getId().equals(currentUser.getId());
-        boolean isAdmin = currentUser.getRole().equals("ROLE_ADMIN");
+    // boolean isAssignee = task.getAssignee() != null &&
+    // task.getAssignee().getId().equals(currentUser.getId());
+    // boolean isProjectOwner = task.getProject().getOwner() != null &&
+    // task.getProject().getOwner().getId().equals(currentUser.getId());
+    // boolean isAdmin = currentUser.getRole().equals("ROLE_ADMIN");
 
-        return isAssignee || isProjectOwner || isAdmin;
-    }
+    // return isAssignee || isProjectOwner || isAdmin;
+    // }
 
-    public boolean isProjectOwner(Long projectId) {
-        Project project = projectRepo.findById(projectId).orElse(null);
-        User currentUser = getCurrentUser();
+    // public boolean isProjectOwner(Long projectId) {
+    // Project project = projectRepo.findById(projectId).orElse(null);
+    // User currentUser = getCurrentUser();
 
-        return project != null && currentUser != null &&
-                project.getOwner() != null && project.getOwner().getId().equals(currentUser.getId());
-    }
+    // return project != null && currentUser != null &&
+    // project.getOwner() != null &&
+    // project.getOwner().getId().equals(currentUser.getId());
+    // }
 }
