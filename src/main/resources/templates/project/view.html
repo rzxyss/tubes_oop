@@ -141,7 +141,7 @@
                                 th:text="${task.priority}"></span>
                               <span class="ms-2" th:text="${#dates.format(task.dueDate, 'yyyy-MM-dd')}"></span>
                             </div>
-                            <div>
+                            <div th:if="${authService.canEditTask(task.id)}">
                               <a th:href="@{/projects/{projectId}/tasks/{taskId}/edit(projectId=${project.id},taskId=${task.id})}"
                                 class="btn btn-warning btn-sm" sec:authorize="hasRole('ADMIN')">Edit</a>
                               <form

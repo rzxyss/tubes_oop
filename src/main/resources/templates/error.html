@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Error</title>
+</head>
+
+<body>
+    <div th:if="${param.error != null}">
+        <p th:switch="${param.error}">
+            <span th:case="'unauthorized'">Anda tidak memiliki akses!</span>
+            <span th:case="'task_not_found'">Task tidak ditemukan!</span>
+            <span th:case="'project_not_found'">Project tidak ditemukan!</span>
+            <span th:case="*">Terjadi kesalahan!</span>
+        </p>
+    </div>
+</body>
+
+</html>
