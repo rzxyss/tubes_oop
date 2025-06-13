@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.tubes.model.*;
 import com.tubes.repository.*;
+import jakarta.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,8 +23,30 @@ public class ProjectController {
     private ProjectMemberRepository projectMemberRepo;
 
     @GetMapping
-    public String listProjects(Model model) {
-        model.addAttribute("projects", projectRepo.findAll());
+    public String listProjects(Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        List<Project> projects;
+
+        if (currentUser.getRole().equals("ROLE_ADMIN")) {
+            projects = projectRepo.findAll();
+        } else {
+            Set<Project> userProjects = new HashSet<>();
+
+            List<ProjectMember> memberships = projectMemberRepo.findByUser(currentUser);
+            for (ProjectMember membership : memberships) {
+                userProjects.add(membership.getProject());
+            }
+
+            userProjects.addAll(projectRepo.findByOwner(currentUser));
+
+            projects = new ArrayList<>(userProjects);
+        }
+
+        model.addAttribute("projects", projects);
         return "project/list";
     }
 
