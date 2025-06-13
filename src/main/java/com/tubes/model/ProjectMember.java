@@ -9,14 +9,15 @@ public class ProjectMember {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private String role; // ADMIN, MEMBER, VIEWER
+    private String role;
 
-    // Constructors
     public ProjectMember() {
     }
 
