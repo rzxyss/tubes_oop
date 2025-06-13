@@ -1,7 +1,10 @@
 package com.tubes.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Project {
@@ -13,22 +16,43 @@ public class Project {
     private String description;
     private String status;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadline;
+
     @ManyToOne
     private User owner;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectMember> members = new ArrayList<>();
+
     // Constructors
     public Project() {
     }
 
-    public Project(String name, String description, String status, User owner, List<Task> tasks) {
+    public Project(String name, String description, String status, LocalDate deadline, User owner) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.deadline = deadline;
         this.owner = owner;
-        this.tasks = tasks;
+    }
+
+    // Helper methods untuk mengelola members
+    public void addMember(User user, String role) {
+        ProjectMember member = new ProjectMember(this, user, role);
+        members.add(member);
+    }
+
+    public void removeMember(User user) {
+        members.removeIf(member -> member.getUser().getId().equals(user.getId()));
+    }
+
+    public boolean hasMember(User user) {
+        return members.stream()
+                .anyMatch(member -> member.getUser().getId().equals(user.getId()));
     }
 
     // Getters and Setters
@@ -78,5 +102,21 @@ public class Project {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public List<ProjectMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<ProjectMember> members) {
+        this.members = members;
     }
 }
