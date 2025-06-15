@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.tubes.Services.AuthenticationService;
 import com.tubes.model.User;
 import com.tubes.repository.UserRepository;
 
@@ -14,6 +15,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private AuthenticationService authService;
 
     @GetMapping("")
     public String index(Model model) {

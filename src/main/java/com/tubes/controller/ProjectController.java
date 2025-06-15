@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.tubes.model.*;
 import com.tubes.repository.*;
-import jakarta.servlet.http.HttpSession;
 import java.util.*;
 import java.util.stream.Collectors;
+import com.tubes.Services.AuthenticationService;
 
 @Controller
 @RequestMapping("/projects")
@@ -22,9 +22,12 @@ public class ProjectController {
     @Autowired
     private ProjectMemberRepository projectMemberRepo;
 
+    @Autowired
+    private AuthenticationService authService;
+
     @GetMapping
-    public String listProjects(Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
+    public String listProjects(Model model) {
+        User currentUser = authService.getCurrentUser();
         if (currentUser == null) {
             return "redirect:/login";
         }
@@ -35,14 +38,11 @@ public class ProjectController {
             projects = projectRepo.findAll();
         } else {
             Set<Project> userProjects = new HashSet<>();
-
             List<ProjectMember> memberships = projectMemberRepo.findByUser(currentUser);
             for (ProjectMember membership : memberships) {
                 userProjects.add(membership.getProject());
             }
-
             userProjects.addAll(projectRepo.findByOwner(currentUser));
-
             projects = new ArrayList<>(userProjects);
         }
 

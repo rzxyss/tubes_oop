@@ -38,29 +38,34 @@ public class AuthenticationService {
         return currentUser != null && currentUser.getId().equals(userId);
     }
 
-    // public boolean canEditTask(Long taskId) {
-    // Task task = taskRepo.findById(taskId).orElse(null);
-    // User currentUser = getCurrentUser();
+    public boolean isAdmin() {
+        User currentUser = getCurrentUser();
+        return currentUser != null && currentUser.getRole().equals("ROLE_ADMIN");
+    }
 
-    // if (task == null || currentUser == null) {
-    // return false;
-    // }
+    public boolean canEditTask(Long taskId) {
+        Task task = taskRepo.findById(taskId).orElse(null);
+        User currentUser = getCurrentUser();
 
-    // boolean isAssignee = task.getAssignee() != null &&
-    // task.getAssignee().getId().equals(currentUser.getId());
-    // boolean isProjectOwner = task.getProject().getOwner() != null &&
-    // task.getProject().getOwner().getId().equals(currentUser.getId());
-    // boolean isAdmin = currentUser.getRole().equals("ROLE_ADMIN");
+        if (task == null || currentUser == null) {
+            return false;
+        }
 
-    // return isAssignee || isProjectOwner || isAdmin;
-    // }
+        boolean isAssignee = task.getAssignee() != null &&
+                task.getAssignee().getId().equals(currentUser.getId());
+        boolean isProjectOwner = task.getProject().getOwner() != null &&
+                task.getProject().getOwner().getId().equals(currentUser.getId());
+        boolean isAdmin = isAdmin();
 
-    // public boolean isProjectOwner(Long projectId) {
-    // Project project = projectRepo.findById(projectId).orElse(null);
-    // User currentUser = getCurrentUser();
+        return isAssignee || isProjectOwner || isAdmin;
+    }
 
-    // return project != null && currentUser != null &&
-    // project.getOwner() != null &&
-    // project.getOwner().getId().equals(currentUser.getId());
-    // }
+    public boolean isProjectOwner(Long projectId) {
+        Project project = projectRepo.findById(projectId).orElse(null);
+        User currentUser = getCurrentUser();
+
+        return project != null && currentUser != null &&
+                project.getOwner() != null &&
+                project.getOwner().getId().equals(currentUser.getId());
+    }
 }
